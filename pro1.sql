@@ -1,7 +1,18 @@
-drop procedure if exists pro1;
+drop PROCEDURE if EXISTS pro1;
 delimiter $
-create procedure pro1(x int,y int)
-begin 
-	select  x+y R1;
+CREATE PROCEDURE pro1(name varchar(40))
+BEGIN
+DECLARE x int;
+DECLARE b varchar(40);
+set x:=1;
+set b:="";
+lbl:LOOP
+SELECT concat(b,SUBSTR(name,x,1),',');
+set x:= x + 1;
+if (x>length(name))THEN
+
+leave lbl;
+end if;
+end loop lbl;
 end $
 delimiter ;
