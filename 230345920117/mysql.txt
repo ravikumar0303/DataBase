@@ -1,0 +1,50 @@
+  section 1:
+1)select * from (select *, mod(row_number() over(),2)r1 from emp)t1 where r1=0;
+2)select max(sal)
+3) select ename,job,sal from emp where sal>(select sal from emp where ename='smith');
+4) select * from emp where year(hiredate) = 1981;
+5)select * from emp where job='manager' and deptno=(select deptno from dept where dname='sales');
+6)select ename,empno,job,sal from emp where sal between 1000 and 2000;
+7)
+8)select  count(ename) from emp where ename like 'A%'or 'M%';
+9)select phone, substr(phone,6,4), concat('******',substr(phone,6,4)) from emp;
+10)select * from emp where empno not in (select empno from emp,emp_cards where emp.empno=emp_cards.empid);
+
+
+section 2:
+
+1)
+ drop procedure if exists adduser1;
+ delimiter $
+ create procedure adduser1(_name varchar(45),_pwd varchar(15),_email varchar(30))
+ begin
+    declare count int default 0;
+	create table if not exists login(username varchar(45),password varchar(15),email varchar(30));
+	insert into login values(_name,_pwd,_email);
+	if count >= 1 then
+		select username,password from login;
+	ELSE	
+	   SELECT "User already present";
+	
+ end $
+ delimiter ;
+
+
+2)
+
+ drop procedure if exists seclog;
+ delimiter $
+ create procedure seclog(_email varchar(20))
+ begin
+	declare count int default 0;
+	create table if not exists login(username varchar(25),password varchar(20),email varchar(20));
+	create table if not exists log(id int auto_increment, curr_time time, curr_date date,message varchar(100));
+	select count(email) into count from login where email=_email;
+	if count >= 1 then
+		select username,password from login;
+	else
+		select "not found user";
+		insert into log(curr_date,curr_time,message) values(curtime(),curdate(),concat(_email," was searched "));
+	end if;
+ end $
+ delimiter ;
